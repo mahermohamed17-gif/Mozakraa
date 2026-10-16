@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>لوحة التحكم</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 20px;margin:14px 0}
+label{display:block;font-weight:700;margin:12px 0 4px;font-size:15px}
+input,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0f1722;color:var(--ink);font:inherit;font-size:16px}
+input[type=file]{padding:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+button.btn{width:100%;margin-top:16px;--a:#0c9a52}
+button.btn.del{--a:#d33;width:auto;margin:0;font-size:14px;padding:6px 14px}
+button.btn.sec{--a:#2f7bd9}
+.msg{margin-top:12px;padding:10px 14px;border-radius:12px;font-size:15px}
+.msg.ok{background:#0c3a22;color:#9ff0c1}.msg.err{background:#3b1010;color:#ffb3b3}.msg.inf{background:#1d2a3d;color:#cfe0ff}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.it:first-child{border-top:0}.it .t{flex:1;min-width:0}.it small{color:var(--mut)}
+.top{display:flex;justify-content:space-between;align-items:center}
+.hint{color:var(--mut);font-size:13px;margin:4px 0 0}
+</style></head><body>
+<header class="hero"><h1>🔐 لوحة التحكم</h1><p>للأدمن فقط</p></header>
+<div class="wrap" id="root"></div>
+<script src="config.js"></script>
+<script src="courses.js"></script>
+<script src="items.js"></script>
+<script src="admin.js"></script>
+</body></html>
