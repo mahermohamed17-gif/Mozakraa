@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>تغذية نبات - سكشن 2</title>
+<style>
+:root{--a:#0c9a52;--bg:#0e1520;--ink:#eef3fa;--line:#2c3d58;--soft:#172233;--th:#1f2f48;--mut:#9fb2cc}
+@media(prefers-color-scheme:light){:root{--bg:#f2f5fa;--ink:#14202e;--line:#c4d1e3;--soft:#fff;--th:#e3ecf8;--mut:#4d6079}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","DejaVu Sans",Arial,sans-serif;line-height:1.95;color:var(--ink);background:var(--bg);padding-bottom:84px}
+bdi{font-family:"Segoe UI",Arial,sans-serif}
+.hd{padding:22px 16px 14px;text-align:center;background:linear-gradient(160deg,color-mix(in srgb,var(--a) 55%,#000),var(--bg) 85%);color:#fff}
+.hd h1{margin:0;font-size:clamp(22px,5vw,34px)}.hd p{margin:2px 0 0;opacity:.85;font-size:15px}
+.pb{height:6px;background:rgba(255,255,255,.18);border-radius:9px;margin:12px auto 0;max-width:420px;overflow:hidden}.pb i{display:block;height:100%;width:0;background:#fff;transition:width .5s}
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:var(--soft);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:9}
+.nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mut);font:inherit;font-size:12px;font-weight:700;cursor:pointer;border-radius:14px;padding:4px 0;line-height:1.4}
+.nav button i{display:block;font-style:normal;font-size:22px;transition:transform .25s}
+.nav button.on{color:var(--ink);background:color-mix(in srgb,var(--a) 28%,transparent)}.nav button.on i{transform:scale(1.2)}
+.wrap{max-width:820px;margin:0 auto;padding:14px}
+.pane{display:none}.pane.on{display:block;animation:pop .35s}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--soft);border:1px solid var(--line);border-top:5px solid var(--a);border-radius:20px;padding:16px 18px;margin:10px 0}
+.card h2{margin:0 0 6px;font-size:21px;line-height:1.6}
+.btn{font:inherit;font-weight:800;cursor:pointer;border:2px solid var(--a);background:transparent;color:var(--ink);border-radius:99px;padding:6px 20px;transition:.2s}
+.btn.main{background:var(--a);color:#0d141c}.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:12px 0}
+.dots{display:flex;gap:6px;justify-content:center;margin:6px 0 2px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);transition:.3s}.dots i.on{background:var(--a);transform:scale(1.4)}.dots i.past{background:color-mix(in srgb,var(--a) 55%,var(--line))}
+.slide{animation:inR .35s}.slide.back{animation:inL .35s}
+@keyframes inR{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.sm{color:var(--mut);font-size:13px}
+.tw{overflow-x:auto;margin:10px 0}table{border-collapse:collapse;width:100%;min-width:250px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:right;vertical-align:top}th{background:var(--th)}
+ol,ul{padding-right:26px;margin:8px 0}li{margin:5px 0}p{margin:8px 0}
+.formula{background:var(--th);border-right:5px solid var(--a);border-radius:12px;padding:10px 16px;margin:10px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fx{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}.frac{display:inline-flex;flex-direction:column;align-items:center;text-align:center;line-height:1.5}
+.frac span:first-child{border-bottom:2px solid currentColor;padding:0 8px}.frac span:last-child{padding:0 8px}
+.qa{border:1.5px dashed var(--a);border-radius:14px;padding:10px 14px;margin:12px 0}.qa .q{font-weight:800}
+.qa .a{display:none;margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}.qa.open .a{display:block;animation:pop .35s}
+.rv{font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--a);background:transparent;color:var(--ink);border-radius:99px;padding:0 14px;margin-top:6px}
+.qa.open .rv{background:var(--a);color:#0d141c}
+.rc{min-height:150px}.rc .q{font-size:20px;font-weight:800}
+.good{background:#1c8f55;border-color:#1c8f55;color:#fff}.bad{background:#c0392b;border-color:#c0392b;color:#fff}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mt button{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--soft);color:var(--ink);border-radius:14px;padding:10px;text-align:center;transition:.25s}
+.mt button.sel{border-color:var(--a);background:color-mix(in srgb,var(--a) 25%,var(--soft))}
+.mt button.ok{border-color:#1c8f55;background:#1c8f55;color:#fff;opacity:.55;pointer-events:none}
+.mt button.no{animation:sh .4s;border-color:#c0392b}
+@keyframes sh{25%{transform:translateX(7px)}75%{transform:translateX(-7px)}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.chips button{font:inherit;font-size:13px;cursor:pointer;border:1.5px solid var(--a);background:transparent;color:var(--ink);border-radius:99px;padding:0 12px}.chips button.on{background:var(--a);color:#0d141c}
+.tool label{display:block;font-weight:700;margin-top:8px}.tool input{width:100%;font:inherit;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:12px}.res div{background:var(--th);border-radius:12px;padding:8px 12px}.res b{display:block;font-size:20px;color:var(--a)}
+.big{font-size:54px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="hd"><h1>🌱 تغذية نبات — سكشن 2</h1><p>شروط أخذ العينة النباتية وتجهيزها وقوانين التجفيف والمسائل</p><div class="pb"><i id="pb"></i></div></div>
+<div class="wrap">
+<div class="pane on" id="learn"><div class="dots" id="dots"></div><div id="sl"></div>
+<div class="row"><button class="btn" id="pv">→ السابق</button><span class="sm" id="sc"></span><button class="btn main" id="nx">التالي ←</button></div></div>
+<div class="pane" id="recall"><div id="rcbox"></div></div>
+<div class="pane" id="match"><div class="chips" id="chips"></div><div id="mbox"></div></div>
+<div class="pane" id="full"></div>
+<div class="pane" id="calc"><div class="card tool"><h3 style="margin:0">🧮 حاسبة قوانين التجفيف</h3>
+<p class="sm">بتطبق نفس القوانين المكتوبة في السكشن. اكتب الأوزان بالجرام.</p>
+<label>الوزن الأخضر</label><input id="cf" type="number" step="any" inputmode="decimal">
+<label>الوزن الجاف هوائي (بعد التجفيف الأولي)</label><input id="ca" type="number" step="any" inputmode="decimal">
+<label>الوزن الجاف تماما (بعد ١٠٥ °م)</label><input id="co" type="number" step="any" inputmode="decimal">
+<label>عدد النباتات (اختياري)</label><input id="cn" type="number" step="any" inputmode="decimal">
+<div class="res" id="cr"></div>
+<p><button type="button" id="ex">جرّب مثال</button></p></div></div>
+</div>
+<div class="nav"><button class="on" data-m="learn"><i>📖</i>درس</button><button data-m="recall"><i>🧠</i>راجع</button><button data-m="match"><i>🎯</i>وصّل</button><button data-m="full"><i>📄</i>الكل</button><button data-m="calc"><i>🧮</i>حاسبة</button></div>
+<script>
+const D={"groups": [{"t": "شروط أخذ العينة النباتية", "h": "<ol><li>العينة تكون ممثلة، لأن الأرض تكون «غير متجانسة».<\/li><\/ol><div class=\"tw\"><table><thead><tr><th>الحالة<\/th><th>طريقة أخذ العينة<\/th><\/tr><\/thead><tbody><tr><td>إذا كان الحقل معامل بمعاملة واحدة<\/td><td>تؤخذ العينة من أماكن متفرقة<\/td><\/tr><tr><td>إذا كان الحقل معامل بأكثر من معاملة<\/td><td>نأخذ نباتات لكل معاملة على حدة<\/td><\/tr><\/tbody><\/table><\/div><p>عند أخذ العينة النباتية على فترات مختلفة من نمو النبات: يجب عدم أخذ العينة التالية من مكان ملاصق لمكان أخذ العينة الأولى، لأن ذلك «نمو غير طبيعي» للنباتات المجاورة.<\/p><ol start=\"2\"><li>يجب عدم التحيز لبعض النباتات.<\/li><li>استبعاد النباتات المصابة بالأمراض الحشرية.<\/li><li>عدم أخذ العينات بعد الري أو التسميد مباشرة.<\/li><li>تجنب غسل النباتات لتنظيفها: يؤدي ذلك لفقد «المركبات المعدنية».<\/li><li>في حالة النباتات المزروعة في أصص: يتم ترقيم الأصص ونأخذ العينة منها بأخذ جزء من التربة، أمر عليه تيار ماء للتخلص من التربة.<\/li><\/ol>"}, {"t": "مصادر تلوث العينة النباتية", "h": "<ol><li>التلوث بحبيبات التربة: أرض رملية ← يؤثر على نتائج التقدير. أرض جيرية ← يزداد تركيز <bdi dir=\"ltr\">Ca<\/bdi> و <bdi dir=\"ltr\">Mg<\/bdi> ← خطأ.<\/li><li>التلوث بالحديد والألومنيوم.<\/li><li>عنصر <bdi dir=\"ltr\">K<\/bdi>: لا يحدث تلوث، لأن تركيزه في النبات أكبر منه في التربة.<\/li><li>التلوث بالأسمدة المضافة نثرا.<\/li><\/ol><div class=\"qa\"><div class=\"q\">علل: يجب عدم غلق الأكياس التي بها النبات.<\/div><button type=\"button\" class=\"rv\">👁️ اعرض الإجابة<\/button><div class=\"a\"><p>يؤدي ذلك إلى:<\/p><ol><li>ارتفاع درجة الحرارة.<\/li><li>زيادة نقص المادة الجافة الناتجة من التنفس.<\/li><li>التغير في تركيب المواد العضوية «كربوهيدرات – بروتينات».<\/li><\/ol><\/div><\/div>"}, {"t": "كيف يتم تحضير عينات النبات في المعمل؟", "h": "<ol><li>فتح الأكياس – فرد العينات – التخلص من الأتربة بعيدا عن بعضها.<\/li><li>فصل الجذر عن الساق عن الورقة.<\/li><li>التجفيف: تجفيف أولي، وتجفيف ثانوي.<\/li><\/ol><div class=\"tw\"><table><thead><tr><th><\/th><th>التجفيف الأولي<\/th><th>التجفيف الثانوي<\/th><\/tr><\/thead><tbody><tr><td>درجة الحرارة<\/td><td>٦٠ – ٧٠ °م لمدة ١ – ٣ أيام<\/td><td>١٠٥ °م<\/td><\/tr><\/tbody><\/table><\/div><div class=\"qa\"><div class=\"q\">سؤال: لا يتم رفع درجة الحرارة على ١٠٥ °م مرة واحدة؟<\/div><button type=\"button\" class=\"rv\">👁️ اعرض الإجابة<\/button><div class=\"a\"><p>لكي لا يحدث تغير في التركيب الكيميائي للنسيج النباتي.<\/p><\/div><\/div><p>الغرض منه:<\/p><ol><li>التخلص من الرطوبة.<\/li><li>الحفاظ على النبات من نمو الفطريات.<\/li><li>تقدير العناصر المعدنية.<\/li><\/ol>"}, {"t": "قوانين التجفيف", "h": "<div class=\"formula\"><b>١) % الرطوبة الأولية =<\/b> <span class=\"fx\"><span class=\"frac\"><span>الوزن الأخضر − وزن الجاف هوائي<\/span><span>الوزن الأخضر<\/span><\/span> × ١٠٠<\/span><\/div><div class=\"formula\"><b>٢) % الرطوبة الثانوية =<\/b> <span class=\"fx\"><span class=\"frac\"><span>الجاف هوائي − الجاف تماما<\/span><span>الجاف هوائي<\/span><\/span> × ١٠٠<\/span><\/div><div class=\"formula\"><b>٣) % الرطوبة الكلية =<\/b> <span class=\"fx\">الأولية + الثانوية × <span class=\"frac\"><span>١٠٠ − الأولية<\/span><span>١٠٠<\/span><\/span><\/span><\/div><div class=\"formula\"><b>٤) % المادة الجافة =<\/b> <span class=\"fx\">١٠٠ − % الرطوبة<\/span><\/div><div class=\"formula\"><b>٥) وزن المادة الجافة للنبات الواحد =<\/b> <span class=\"fx\"><span class=\"frac\"><span>الوزن الأخضر<\/span><span>عدد النباتات<\/span><\/span> × <span class=\"frac\"><span>١٠٠ − الرطوبة الكلية<\/span><span>١٠٠<\/span><\/span><\/span><\/div>"}, {"t": "المسائل", "h": "<div class=\"qa\"><div class=\"q\">مسألة ١: عينة نباتية وزنها الطازج = ٢ كجم، أخذ منها ١ كجم للتجفيف على ٦٠–٧٠ °م فكان الوزن بعد التجفيف = ٢٠٠ جرام، حفظ منه ١٠٠ جرام وجففت على ١٠٥ °م فكان الوزن بعد التجفيف = ٩٦ جرام. احسب: % الرطوبة الكلية.<\/div><button type=\"button\" class=\"rv\">👁️ اعرض الإجابة<\/button><div class=\"a\"><p>الحل:<\/p><ol><li>% الرطوبة الأولية = (الوزن الأخضر − الجاف الأولي) ÷ الوزن الأخضر × ١٠٠ = (١٠٠٠ − ٢٠٠ ÷ ١٠٠٠) × ١٠٠ = ٨٠٪<\/li><li>% الرطوبة الثانوية = (الجاف الأولي − الجاف تماما) ÷ الجاف الأولي × ١٠٠ = (١٠٠ − ٩٦) ÷ ١٠٠ × ١٠٠ = ٤٪<\/li><li>% الرطوبة الكلية = الأولية + الثانوية × (١٠٠ − الأولية) ÷ ١٠٠ = ٨٠ + ٤ × (١٠٠ − ٨٠) ÷ ١٠٠ = ٨٠٫٨٪<\/li><\/ol><\/div><\/div><div class=\"qa\"><div class=\"q\">مسألة ٢: عينة نباتية طازجة من ٥ نباتات وزنها الطازج = ٣ كجم، جففت على ٦٠–٧٠ °م فكان الوزن بعد التجفيف = ٦٠٠ جرام، ثم جففت على ١٠٥ °م فكان الوزن ٥٨٠ جرام. احسب: وزن المادة الجافة للنبات الواحد.<\/div><button type=\"button\" class=\"rv\">👁️ اعرض الإجابة<\/button><div class=\"a\"><p>الحل:<\/p><ol><li>% الرطوبة الأولية = (٣٠٠٠ − ٦٠٠ ÷ ٣٠٠٠) × ١٠٠ = ٨٠٪<\/li><li>% الرطوبة الثانوية = (٦٠٠ − ٥٨٠ ÷ ٦٠٠) × ١٠٠ = ٣٫٣٣٪<\/li><li>% الرطوبة الكلية = ٨٠ + ٣٫٣٣ × (١٠٠ − ٨٠) ÷ ١٠٠ = ٨٠٫٦٦٪<\/li><li>وزن المادة الجافة = (٣٠٠٠ ÷ ٥) × (١٠٠ − ٨٠٫٦٦) ÷ ١٠٠ = ١١٦٫٤ جرام<\/li><\/ol><\/div><\/div>"}], "cards": [{"q": "علل: يجب عدم غلق الأكياس التي بها النبات.", "a": "<p>يؤدي ذلك إلى:<\/p><ol><li>ارتفاع درجة الحرارة.<\/li><li>زيادة نقص المادة الجافة الناتجة من التنفس.<\/li><li>التغير في تركيب المواد العضوية «كربوهيدرات – بروتينات».<\/li><\/ol>", "g": "مصادر تلوث العينة النباتية"}, {"q": "سؤال: لا يتم رفع درجة الحرارة على ١٠٥ °م مرة واحدة؟", "a": "<p>لكي لا يحدث تغير في التركيب الكيميائي للنسيج النباتي.<\/p>", "g": "كيف يتم تحضير عينات النبات في المعمل؟"}, {"q": "مسألة ١: عينة نباتية وزنها الطازج = ٢ كجم، أخذ منها ١ كجم للتجفيف على ٦٠–٧٠ °م فكان الوزن بعد التجفيف = ٢٠٠ جرام، حفظ منه ١٠٠ جرام وجففت على ١٠٥ °م فكان الوزن بعد التجفيف = ٩٦ جرام. احسب: % الرطوبة الكلية.", "a": "<p>الحل:<\/p><ol><li>% الرطوبة الأولية = (الوزن الأخضر − الجاف الأولي) ÷ الوزن الأخضر × ١٠٠ = (١٠٠٠ − ٢٠٠ ÷ ١٠٠٠) × ١٠٠ = ٨٠٪<\/li><li>% الرطوبة الثانوية = (الجاف الأولي − الجاف تماما) ÷ الجاف الأولي × ١٠٠ = (١٠٠ − ٩٦) ÷ ١٠٠ × ١٠٠ = ٤٪<\/li><li>% الرطوبة الكلية = الأولية + الثانوية × (١٠٠ − الأولية) ÷ ١٠٠ = ٨٠ + ٤ × (١٠٠ − ٨٠) ÷ ١٠٠ = ٨٠٫٨٪<\/li><\/ol>", "g": "المسائل"}, {"q": "مسألة ٢: عينة نباتية طازجة من ٥ نباتات وزنها الطازج = ٣ كجم، جففت على ٦٠–٧٠ °م فكان الوزن بعد التجفيف = ٦٠٠ جرام، ثم جففت على ١٠٥ °م فكان الوزن ٥٨٠ جرام. احسب: وزن المادة الجافة للنبات الواحد.", "a": "<p>الحل:<\/p><ol><li>% الرطوبة الأولية = (٣٠٠٠ − ٦٠٠ ÷ ٣٠٠٠) × ١٠٠ = ٨٠٪<\/li><li>% الرطوبة الثانوية = (٦٠٠ − ٥٨٠ ÷ ٦٠٠) × ١٠٠ = ٣٫٣٣٪<\/li><li>% الرطوبة الكلية = ٨٠ + ٣٫٣٣ × (١٠٠ − ٨٠) ÷ ١٠٠ = ٨٠٫٦٦٪<\/li><li>وزن المادة الجافة = (٣٠٠٠ ÷ ٥) × (١٠٠ − ٨٠٫٦٦) ÷ ١٠٠ = ١١٦٫٤ جرام<\/li><\/ol>", "g": "المسائل"}], "sets": [{"g": "شروط أخذ العينة النباتية", "p": [["إذا كان الحقل معامل بمعاملة واحدة", "تؤخذ العينة من أماكن متفرقة"], ["إذا كان الحقل معامل بأكثر من معاملة", "نأخذ نباتات لكل معاملة على حدة"]]}], "key": "plant-nutrition-2"};const G=D.groups,CARDS=D.cards,SETS=D.sets;
+const $=id=>document.getElementById(id);
+let seen={};try{seen=JSON.parse(localStorage.getItem('sd-'+D.key)||'{}')}catch(e){}
+const keep=()=>{try{localStorage.setItem('sd-'+D.key,JSON.stringify(seen))}catch(e){}};
+function prog(){$('pb').style.width=(Object.keys(seen).length/G.length*100)+'%'}
+document.addEventListener('click',e=>{const b=e.target.closest('.rv');if(b){const q=b.closest('.qa');q.classList.toggle('open');b.textContent=q.classList.contains('open')?'🙈 اخفي الإجابة':'👁️ اعرض الإجابة'}});
+/* tabs */
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id===b.dataset.m));window.scrollTo(0,0);if(b.dataset.m==='recall'&&!rq)startRecall();if(b.dataset.m==='match'&&!cur)pickSet(0)});
+/* learn */
+let i=0,back=false;
+function showSlide(){const g=G[i];seen[i]=1;keep();prog();
+ $('sl').innerHTML='<div class="card slide'+(back?' back':'')+'"><h2>'+(i+1)+'. '+g.t+'</h2>'+g.h+'</div>'+(i===G.length-1?'<div class="card" style="text-align:center"><div class="big">🎉</div><b>خلصت الدرس!</b><p class="sm">جرّب تبويب «راجع» عشان تختبر نفسك.</p></div>':'');
+ $('dots').innerHTML=G.map((_,k)=>'<i class="'+(k===i?'on':k<i?'past':'')+'"></i>').join('');
+ $('sc').textContent=(i+1)+' / '+G.length;$('pv').disabled=i===0;$('nx').disabled=i===G.length-1}
+$('nx').onclick=()=>{if(i<G.length-1){back=false;i++;showSlide();window.scrollTo(0,0)}};
+$('pv').onclick=()=>{if(i>0){back=true;i--;showSlide();window.scrollTo(0,0)}};
+let tx=null;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(tx===null||!$('learn').classList.contains('on'))return;const d=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(d)>70)(d>0?$('pv'):$('nx')).click()},{passive:true});
+document.addEventListener('keydown',e=>{if(!$('learn').classList.contains('on'))return;if(e.key==='ArrowLeft')$('nx').click();if(e.key==='ArrowRight')$('pv').click()});
+showSlide();
+/* recall: الكارت اللي مش عارفه بيرجع تاني */
+let rq=null,first=0,total=0;
+function startRecall(){rq=CARDS.map((_,k)=>k);for(let k=rq.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[rq[k],rq[j]]=[rq[j],rq[k]]}first=0;total=rq.length;nextCard()}
+function nextCard(){const box=$('rcbox');
+ if(!CARDS.length){box.innerHTML='<div class="card">مفيش أسئلة في السكشن ده.</div>';return}
+ if(!rq.length){box.innerHTML='<div class="card" style="text-align:center"><div class="big">🏆</div><h2>خلصت!</h2><p>عرفت '+first+' من '+total+' من أول مرة.</p><button class="btn main" id="rs">ابدأ تاني</button></div>';$('rs').onclick=startRecall;return}
+ const c=CARDS[rq[0]];box.innerHTML='<p class="sm" style="text-align:center">باقي '+rq.length+' · '+c.g+'</p><div class="card rc"><div class="qa"><div class="q">'+c.q+'</div><button type="button" class="rv">👁️ اعرض الإجابة</button><div class="a">'+c.a+'</div></div></div><div class="row"><button class="btn good" id="kn">✅ عرفتها</button><button class="btn bad" id="dk">❌ لسه</button></div>';
+ const q=box.querySelector('.qa');let tried=false;
+ const done=ok=>{const id=rq.shift();if(ok){if(!tried)first++}else{tried=true;rq.splice(Math.min(2,rq.length),0,id);if(!rq.includes(id))rq.push(id)}nextCard()};
+ $('kn').onclick=()=>{done(true)};$('dk').onclick=()=>{tried=true;const id=rq.shift();rq.splice(Math.min(2,rq.length),0,id);nextCard()}}
+/* match */
+let cur=null,sel=null;
+function pickSet(k){cur=SETS[k];$('chips').innerHTML=SETS.map((s,x)=>'<button class="'+(x===k?'on':'')+'" data-k="'+x+'">'+s.g+'</button>').join('');
+ $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>pickSet(+b.dataset.k));renderMatch()}
+function sh(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function renderMatch(){if(!SETS.length){$('mbox').innerHTML='<div class="card">مفيش تمرين توصيل في السكشن ده.</div>';return}
+ sel=null;const L=sh(cur.p.map((p,k)=>[p[0],k])),R=sh(cur.p.map((p,k)=>[p[1],k]));let left=cur.p.length;
+ $('mbox').innerHTML='<p class="sm" style="text-align:center">دوس على عنصر من اليمين وبعدين اللي يناسبه من الشمال.</p><div class="mt"><div style="display:grid;gap:10px" id="ml"></div><div style="display:grid;gap:10px" id="mr"></div></div><div id="mw"></div>';
+ const mk=(arr,side)=>{const col=$(side);arr.forEach(([t,k])=>{const b=document.createElement('button');b.textContent=t;b.dataset.k=k;b.onclick=()=>{
+  if(side==='ml'){document.querySelectorAll('#ml .sel').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=b;return}
+  if(!sel)return;if(sel.dataset.k===b.dataset.k){sel.classList.remove('sel');sel.classList.add('ok');b.classList.add('ok');sel=null;if(--left===0)$('mw').innerHTML='<div class="card" style="text-align:center"><div class="big">🎯</div><b>برافو! وصلتهم كلهم.</b><p><button class="btn main" id="ag">خلّطهم تاني</button></p></div>',$('ag').onclick=renderMatch}
+  else{b.classList.add('no');setTimeout(()=>b.classList.remove('no'),450)}};col.appendChild(b)})};
+ mk(L,'ml');mk(R,'mr')}
+/* full */
+$('full').innerHTML=G.map((g,k)=>'<div class="card"><h2>'+(k+1)+'. '+g.t+'</h2>'+g.h.split('class="qa"').join('class="qa open"')+'</div>').join('');
+prog();
+
+(function(){const g=id=>parseFloat(document.getElementById(id).value),r=document.getElementById('cr'),f=n=>(Math.round(n*100)/100).toLocaleString('ar-EG');
+function run(){const F=g('cf'),A=g('ca'),O=g('co'),N=g('cn');let h='';
+if(F>0&&A>=0){const P=(F-A)/F*100;h+='<div>الرطوبة الأولية<b>'+f(P)+'٪</b></div>';
+ if(A>0&&O>=0){const S=(A-O)/A*100,T=P+S*(100-P)/100;h+='<div>الرطوبة الثانوية<b>'+f(S)+'٪</b></div><div>الرطوبة الكلية<b>'+f(T)+'٪</b></div><div>المادة الجافة<b>'+f(100-T)+'٪</b></div>';
+ if(N>0)h+='<div>وزن المادة الجافة للنبات الواحد<b>'+f(F/N*(100-T)/100)+' جم</b></div>'}}
+r.innerHTML=h||'<span class="sm">اكتب الأرقام وهتظهر النتايج هنا.</span>'}
+['cf','ca','co','cn'].forEach(i=>document.getElementById(i).oninput=run);
+document.getElementById('ex').onclick=()=>{cf.value=3000;ca.value=600;co.value=580;cn.value=5;run()};run()})();
+
+</script></body></html>

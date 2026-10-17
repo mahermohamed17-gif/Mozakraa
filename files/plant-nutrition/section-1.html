@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>تغذية نبات - سكشن 1</title>
+<style>
+:root{--a:#0c9a52;--bg:#0e1520;--ink:#eef3fa;--line:#2c3d58;--soft:#172233;--th:#1f2f48;--mut:#9fb2cc}
+@media(prefers-color-scheme:light){:root{--bg:#f2f5fa;--ink:#14202e;--line:#c4d1e3;--soft:#fff;--th:#e3ecf8;--mut:#4d6079}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","DejaVu Sans",Arial,sans-serif;line-height:1.95;color:var(--ink);background:var(--bg);padding-bottom:84px}
+bdi{font-family:"Segoe UI",Arial,sans-serif}
+.hd{padding:22px 16px 14px;text-align:center;background:linear-gradient(160deg,color-mix(in srgb,var(--a) 55%,#000),var(--bg) 85%);color:#fff}
+.hd h1{margin:0;font-size:clamp(22px,5vw,34px)}.hd p{margin:2px 0 0;opacity:.85;font-size:15px}
+.pb{height:6px;background:rgba(255,255,255,.18);border-radius:9px;margin:12px auto 0;max-width:420px;overflow:hidden}.pb i{display:block;height:100%;width:0;background:#fff;transition:width .5s}
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:var(--soft);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:9}
+.nav button{flex:1;max-width:120px;border:0;background:none;color:var(--mut);font:inherit;font-size:12px;font-weight:700;cursor:pointer;border-radius:14px;padding:4px 0;line-height:1.4}
+.nav button i{display:block;font-style:normal;font-size:22px;transition:transform .25s}
+.nav button.on{color:var(--ink);background:color-mix(in srgb,var(--a) 28%,transparent)}.nav button.on i{transform:scale(1.2)}
+.wrap{max-width:820px;margin:0 auto;padding:14px}
+.pane{display:none}.pane.on{display:block;animation:pop .35s}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--soft);border:1px solid var(--line);border-top:5px solid var(--a);border-radius:20px;padding:16px 18px;margin:10px 0}
+.card h2{margin:0 0 6px;font-size:21px;line-height:1.6}
+.btn{font:inherit;font-weight:800;cursor:pointer;border:2px solid var(--a);background:transparent;color:var(--ink);border-radius:99px;padding:6px 20px;transition:.2s}
+.btn.main{background:var(--a);color:#0d141c}.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:12px 0}
+.dots{display:flex;gap:6px;justify-content:center;margin:6px 0 2px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);transition:.3s}.dots i.on{background:var(--a);transform:scale(1.4)}.dots i.past{background:color-mix(in srgb,var(--a) 55%,var(--line))}
+.slide{animation:inR .35s}.slide.back{animation:inL .35s}
+@keyframes inR{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.sm{color:var(--mut);font-size:13px}
+.tw{overflow-x:auto;margin:10px 0}table{border-collapse:collapse;width:100%;min-width:250px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:right;vertical-align:top}th{background:var(--th)}
+ol,ul{padding-right:26px;margin:8px 0}li{margin:5px 0}p{margin:8px 0}
+.formula{background:var(--th);border-right:5px solid var(--a);border-radius:12px;padding:10px 16px;margin:10px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fx{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}.frac{display:inline-flex;flex-direction:column;align-items:center;text-align:center;line-height:1.5}
+.frac span:first-child{border-bottom:2px solid currentColor;padding:0 8px}.frac span:last-child{padding:0 8px}
+.qa{border:1.5px dashed var(--a);border-radius:14px;padding:10px 14px;margin:12px 0}.qa .q{font-weight:800}
+.qa .a{display:none;margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}.qa.open .a{display:block;animation:pop .35s}
+.rv{font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--a);background:transparent;color:var(--ink);border-radius:99px;padding:0 14px;margin-top:6px}
+.qa.open .rv{background:var(--a);color:#0d141c}
+.rc{min-height:150px}.rc .q{font-size:20px;font-weight:800}
+.good{background:#1c8f55;border-color:#1c8f55;color:#fff}.bad{background:#c0392b;border-color:#c0392b;color:#fff}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mt button{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--soft);color:var(--ink);border-radius:14px;padding:10px;text-align:center;transition:.25s}
+.mt button.sel{border-color:var(--a);background:color-mix(in srgb,var(--a) 25%,var(--soft))}
+.mt button.ok{border-color:#1c8f55;background:#1c8f55;color:#fff;opacity:.55;pointer-events:none}
+.mt button.no{animation:sh .4s;border-color:#c0392b}
+@keyframes sh{25%{transform:translateX(7px)}75%{transform:translateX(-7px)}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.chips button{font:inherit;font-size:13px;cursor:pointer;border:1.5px solid var(--a);background:transparent;color:var(--ink);border-radius:99px;padding:0 12px}.chips button.on{background:var(--a);color:#0d141c}
+.tool label{display:block;font-weight:700;margin-top:8px}.tool input{width:100%;font:inherit;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:12px}.res div{background:var(--th);border-radius:12px;padding:8px 12px}.res b{display:block;font-size:20px;color:var(--a)}
+.big{font-size:54px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="hd"><h1>🌱 تغذية نبات — سكشن 1</h1><p>المفهوم وطرق تقدير حاجة الأرض للتسميد وتحليل النبات</p><div class="pb"><i id="pb"></i></div></div>
+<div class="wrap">
+<div class="pane on" id="learn"><div class="dots" id="dots"></div><div id="sl"></div>
+<div class="row"><button class="btn" id="pv">→ السابق</button><span class="sm" id="sc"></span><button class="btn main" id="nx">التالي ←</button></div></div>
+<div class="pane" id="recall"><div id="rcbox"></div></div>
+<div class="pane" id="match"><div class="chips" id="chips"></div><div id="mbox"></div></div>
+<div class="pane" id="full"></div>
+
+</div>
+<div class="nav"><button class="on" data-m="learn"><i>📖</i>درس</button><button data-m="recall"><i>🧠</i>راجع</button><button data-m="match"><i>🎯</i>وصّل</button><button data-m="full"><i>📄</i>الكل</button></div>
+<script>
+const D={"groups": [{"t": "مفهوم تغذية النبات", "h": "<p>تغذية النبات: علم يختص بدراسة كل العمليات التي لها علاقة بكيفية حصول النبات على احتياجه من العناصر الغذائية، وكيفية امتصاصها، وطريقة دخول العناصر من البيئة للنبات.<\/p>"}, {"t": "طرق تقدير حاجة الأرض للأسمدة", "h": "<div class=\"qa\"><div class=\"q\">اذكر الطرق التي يتم من خلالها تقدير حاجة الأرض لإضافة الأسمدة:<\/div><button type=\"button\" class=\"rv\">👁️ اعرض الإجابة<\/button><div class=\"a\"><ol><li>تحليل الأرض: يعطي صورة كاملة لحالة التربة. يجرى قبل الزراعة ويعرفني المشاكل الغذائية بالتربة.<\/li><li>تحليل النبات النامي: يعطي صورة كاملة للحالة الغذائية للنبات، سواء نقص أو وفرة في العناصر.<\/li><li>أعراض نقص العناصر الغذائية: اصفرار الأوراق مثلا<\/li><li>الاختبارات البيولوجية: (١) زراعة نباتات حساسة للعناصر الغذائية، مثال: الشعير. (٢) النشاط الميكروبي يدل على وجود عناصر معينة، زي: <bdi dir=\"ltr\">CO₂<\/bdi>.<\/li><\/ol><\/div><\/div>"}, {"t": "الموضوعات الأساسية لتغذية النبات", "h": "<ol><li>تحليل النبات: يجرى بغرض التعرف على محتويات النبات، ويتكون من: ماء، ومواد عضوية، ومواد معدنية.<\/li><li>التحاليل الغذائية: المزارع الرملية والمزارع المائية.<\/li><\/ol>"}, {"t": "محتوى العنصر في التربة لا يدل على احتوائه في النبات", "h": "<p>يعني ممكن تكون كميته كبيرة في التربة ولكن مش بيستفاد منه.<\/p><div class=\"qa\"><div class=\"q\">ليه مش بيستفاد منه؟ بسبب:<\/div><button type=\"button\" class=\"rv\">👁️ اعرض الإجابة<\/button><div class=\"a\"><ol><li>انخفاض حرارة الأرض: يؤثر على المحلول الأرضي ونشاط الكائنات الدقيقة.<\/li><li>سرعة نمو النبات.<\/li><li>نقص الرطوبة من التربة.<\/li><li>سوء الصرف والتهوية.<\/li><li>ظاهرة التضاد (<bdi dir=\"ltr\">Na-K<\/bdi>).<\/li><li>تلف الجذور.<\/li><\/ol><\/div><\/div>"}, {"t": "ما يجب مراعاته عند أخذ العينة", "h": "<ol><li>الجزء النباتي المأخوذ.<\/li><li>وقت أخذ العينة.<\/li><\/ol><p>يختلف حسب: نوع النبات – عمر النبات – نوع العنصر المراد تقديره وصورته.<\/p><p>كمية العنصر الغذائي يختلف، وتركيزه يختلف باختلاف عمر النبات.<\/p><p>النباتات الصغيرة: نسب العناصر بها مرتفعة، وبتقدم العمر تنخفض، بسبب زيادة نمو النبات، يعني زيادة العنصر الغذائي.<\/p>"}, {"t": "الطرق العامة لتحليل النباتات", "h": "<div class=\"tw\"><table><thead><tr><th>النوع<\/th><th>الطريقة<\/th><\/tr><\/thead><tbody><tr><td>كمي<\/td><td>تحليل كلي للنباتات<\/td><\/tr><tr><td>وصفي<\/td><td>اختبارات الأنسجة النباتية السريعة<\/td><\/tr><\/tbody><\/table><\/div>"}], "cards": [{"q": "اذكر الطرق التي يتم من خلالها تقدير حاجة الأرض لإضافة الأسمدة:", "a": "<ol><li>تحليل الأرض: يعطي صورة كاملة لحالة التربة. يجرى قبل الزراعة ويعرفني المشاكل الغذائية بالتربة.<\/li><li>تحليل النبات النامي: يعطي صورة كاملة للحالة الغذائية للنبات، سواء نقص أو وفرة في العناصر.<\/li><li>أعراض نقص العناصر الغذائية: اصفرار الأوراق مثلا<\/li><li>الاختبارات البيولوجية: (١) زراعة نباتات حساسة للعناصر الغذائية، مثال: الشعير. (٢) النشاط الميكروبي يدل على وجود عناصر معينة، زي: <bdi dir=\"ltr\">CO₂<\/bdi>.<\/li><\/ol>", "g": "طرق تقدير حاجة الأرض للأسمدة"}, {"q": "ليه مش بيستفاد منه؟ بسبب:", "a": "<ol><li>انخفاض حرارة الأرض: يؤثر على المحلول الأرضي ونشاط الكائنات الدقيقة.<\/li><li>سرعة نمو النبات.<\/li><li>نقص الرطوبة من التربة.<\/li><li>سوء الصرف والتهوية.<\/li><li>ظاهرة التضاد (<bdi dir=\"ltr\">Na-K<\/bdi>).<\/li><li>تلف الجذور.<\/li><\/ol>", "g": "محتوى العنصر في التربة لا يدل على احتوائه في النبات"}], "sets": [{"g": "الطرق العامة لتحليل النباتات", "p": [["كمي", "تحليل كلي للنباتات"], ["وصفي", "اختبارات الأنسجة النباتية السريعة"]]}], "key": "plant-nutrition-1"};const G=D.groups,CARDS=D.cards,SETS=D.sets;
+const $=id=>document.getElementById(id);
+let seen={};try{seen=JSON.parse(localStorage.getItem('sd-'+D.key)||'{}')}catch(e){}
+const keep=()=>{try{localStorage.setItem('sd-'+D.key,JSON.stringify(seen))}catch(e){}};
+function prog(){$('pb').style.width=(Object.keys(seen).length/G.length*100)+'%'}
+document.addEventListener('click',e=>{const b=e.target.closest('.rv');if(b){const q=b.closest('.qa');q.classList.toggle('open');b.textContent=q.classList.contains('open')?'🙈 اخفي الإجابة':'👁️ اعرض الإجابة'}});
+/* tabs */
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id===b.dataset.m));window.scrollTo(0,0);if(b.dataset.m==='recall'&&!rq)startRecall();if(b.dataset.m==='match'&&!cur)pickSet(0)});
+/* learn */
+let i=0,back=false;
+function showSlide(){const g=G[i];seen[i]=1;keep();prog();
+ $('sl').innerHTML='<div class="card slide'+(back?' back':'')+'"><h2>'+(i+1)+'. '+g.t+'</h2>'+g.h+'</div>'+(i===G.length-1?'<div class="card" style="text-align:center"><div class="big">🎉</div><b>خلصت الدرس!</b><p class="sm">جرّب تبويب «راجع» عشان تختبر نفسك.</p></div>':'');
+ $('dots').innerHTML=G.map((_,k)=>'<i class="'+(k===i?'on':k<i?'past':'')+'"></i>').join('');
+ $('sc').textContent=(i+1)+' / '+G.length;$('pv').disabled=i===0;$('nx').disabled=i===G.length-1}
+$('nx').onclick=()=>{if(i<G.length-1){back=false;i++;showSlide();window.scrollTo(0,0)}};
+$('pv').onclick=()=>{if(i>0){back=true;i--;showSlide();window.scrollTo(0,0)}};
+let tx=null;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(tx===null||!$('learn').classList.contains('on'))return;const d=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(d)>70)(d>0?$('pv'):$('nx')).click()},{passive:true});
+document.addEventListener('keydown',e=>{if(!$('learn').classList.contains('on'))return;if(e.key==='ArrowLeft')$('nx').click();if(e.key==='ArrowRight')$('pv').click()});
+showSlide();
+/* recall: الكارت اللي مش عارفه بيرجع تاني */
+let rq=null,first=0,total=0;
+function startRecall(){rq=CARDS.map((_,k)=>k);for(let k=rq.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[rq[k],rq[j]]=[rq[j],rq[k]]}first=0;total=rq.length;nextCard()}
+function nextCard(){const box=$('rcbox');
+ if(!CARDS.length){box.innerHTML='<div class="card">مفيش أسئلة في السكشن ده.</div>';return}
+ if(!rq.length){box.innerHTML='<div class="card" style="text-align:center"><div class="big">🏆</div><h2>خلصت!</h2><p>عرفت '+first+' من '+total+' من أول مرة.</p><button class="btn main" id="rs">ابدأ تاني</button></div>';$('rs').onclick=startRecall;return}
+ const c=CARDS[rq[0]];box.innerHTML='<p class="sm" style="text-align:center">باقي '+rq.length+' · '+c.g+'</p><div class="card rc"><div class="qa"><div class="q">'+c.q+'</div><button type="button" class="rv">👁️ اعرض الإجابة</button><div class="a">'+c.a+'</div></div></div><div class="row"><button class="btn good" id="kn">✅ عرفتها</button><button class="btn bad" id="dk">❌ لسه</button></div>';
+ const q=box.querySelector('.qa');let tried=false;
+ const done=ok=>{const id=rq.shift();if(ok){if(!tried)first++}else{tried=true;rq.splice(Math.min(2,rq.length),0,id);if(!rq.includes(id))rq.push(id)}nextCard()};
+ $('kn').onclick=()=>{done(true)};$('dk').onclick=()=>{tried=true;const id=rq.shift();rq.splice(Math.min(2,rq.length),0,id);nextCard()}}
+/* match */
+let cur=null,sel=null;
+function pickSet(k){cur=SETS[k];$('chips').innerHTML=SETS.map((s,x)=>'<button class="'+(x===k?'on':'')+'" data-k="'+x+'">'+s.g+'</button>').join('');
+ $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>pickSet(+b.dataset.k));renderMatch()}
+function sh(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function renderMatch(){if(!SETS.length){$('mbox').innerHTML='<div class="card">مفيش تمرين توصيل في السكشن ده.</div>';return}
+ sel=null;const L=sh(cur.p.map((p,k)=>[p[0],k])),R=sh(cur.p.map((p,k)=>[p[1],k]));let left=cur.p.length;
+ $('mbox').innerHTML='<p class="sm" style="text-align:center">دوس على عنصر من اليمين وبعدين اللي يناسبه من الشمال.</p><div class="mt"><div style="display:grid;gap:10px" id="ml"></div><div style="display:grid;gap:10px" id="mr"></div></div><div id="mw"></div>';
+ const mk=(arr,side)=>{const col=$(side);arr.forEach(([t,k])=>{const b=document.createElement('button');b.textContent=t;b.dataset.k=k;b.onclick=()=>{
+  if(side==='ml'){document.querySelectorAll('#ml .sel').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=b;return}
+  if(!sel)return;if(sel.dataset.k===b.dataset.k){sel.classList.remove('sel');sel.classList.add('ok');b.classList.add('ok');sel=null;if(--left===0)$('mw').innerHTML='<div class="card" style="text-align:center"><div class="big">🎯</div><b>برافو! وصلتهم كلهم.</b><p><button class="btn main" id="ag">خلّطهم تاني</button></p></div>',$('ag').onclick=renderMatch}
+  else{b.classList.add('no');setTimeout(()=>b.classList.remove('no'),450)}};col.appendChild(b)})};
+ mk(L,'ml');mk(R,'mr')}
+/* full */
+$('full').innerHTML=G.map((g,k)=>'<div class="card"><h2>'+(k+1)+'. '+g.t+'</h2>'+g.h.split('class="qa"').join('class="qa open"')+'</div>').join('');
+prog();
+
+</script></body></html>
