@@ -154,7 +154,7 @@ function bulkOptions(){
 function showPanel(){
   try{localStorage.setItem('adm_device','1');}catch(e){}
   root.innerHTML=`<div class="top"><span>مسجّل دخول ✅</span><button class="btn sec" id="out" style="width:auto;margin:0;padding:6px 16px;font-size:14px">خروج</button></div>
-  <div class="box"><h2 style="margin:0 0 6px">📊 الزوار</h2><div id="vs" class="sm">جاري التحميل…</div><button class="btn sec" id="vr" style="margin-top:10px">🔄 تحديث الأرقام</button></div>
+  <div class="box"><details open><summary>📊 الزوار</summary><div style="margin-top:8px"><div id="vs" class="sm">جاري التحميل…</div><button class="btn sec" id="vr" style="margin-top:10px">🔄 تحديث الأرقام</button></div></details></div>
   <div class="box"><h2 style="margin:0">رفع / تعديل ملف</h2>
    <div class="row"><div><label>المادة</label><select id="co">${courseOptions()}</select></div>
    <div><label>النوع</label><select id="kd"><option value="lecture">محاضرة</option><option value="section">سكشن</option></select></div></div>
@@ -164,10 +164,10 @@ function showPanel(){
    <label>ملف PDF</label><input id="fp" type="file" accept=".pdf,application/pdf">
    <p class="hint">لو الرقم موجود قبل كده هيتبدل (والملف اللي مش مختاره بيفضل زي ما هو).</p>
    <button class="btn" id="sv">💾 حفظ</button><div id="st"></div></div>
-  <div class="box" id="cmw"><h2 style="margin:0 0 6px">📚 إدارة المواد</h2><p class="hint">زوّد مواد (زي الاختياري) أو عدّل أو امسح من هنا.</p><div id="cm"></div></div>
-  <div class="box"><h2 style="margin:0 0 6px">اللي مرفوع</h2><div id="ls"></div></div>
-  <div class="box"><h2 style="margin:0 0 6px">🗑️ مسح جماعي (نهاية السنة)</h2><p class="hint">بيمسح السكاشن والمحاضرات وملفاتها نهائيا. مفيش رجوع.</p><select id="bs">${bulkOptions()}</select><button class="btn del" id="bb" style="width:100%;margin-top:12px;padding:12px">🗑️ امسح</button><div id="bst"></div></div>
-  <div class="box" id="mg" style="display:none"><h2 style="margin:0 0 6px">الأقسام المدمجة في الموقع</h2><p class="hint" id="mgt"></p><button class="btn sec" id="mgb">⬆️ انقلها للسحابة عشان تقدر تبدّلها وتمسحها من هنا</button><div id="mgs"></div></div>`;
+  <div class="box" id="cmw"><details><summary>📚 إدارة المواد</summary><p class="hint">زوّد مواد (زي الاختياري) أو عدّل أو امسح من هنا.</p><div id="cm"></div></details></div>
+  <div class="box"><details open><summary>📂 اللي مرفوع</summary><div style="margin-top:8px"><select id="lf"><option value="all">كل المواد</option><option value="c">المادة المختارة فوق فقط</option></select><div id="ls"></div></div></details></div>
+  <div class="box"><details><summary>🗑️ مسح جماعي (نهاية السنة)</summary><p class="hint">بيمسح السكاشن والمحاضرات وملفاتها نهائيا. مفيش رجوع.</p><select id="bs">${bulkOptions()}</select><button class="btn del" id="bb" style="width:100%;margin-top:12px;padding:12px">🗑️ امسح</button><div id="bst"></div></details></div>
+  <div class="box" id="mg" style="display:none"><details open><summary>⬆️ الأقسام المدمجة في الموقع</summary><p class="hint" id="mgt"></p><button class="btn sec" id="mgb">⬆️ انقلها للسحابة عشان تقدر تبدّلها وتمسحها من هنا</button><div id="mgs"></div></details></div>`;
   document.getElementById('out').onclick=()=>logout();
   const refresh=()=>{document.getElementById('nm').value=nextNum();hint();renderList();};
   document.getElementById('co').onchange=document.getElementById('kd').onchange=()=>{editing=null;document.getElementById('ti').value='';refresh();};
@@ -233,10 +233,13 @@ async function migrate(){
   btn.disabled=false;
 }
 function renderList(){
-  const {c,k}=cur(), l=items.filter(i=>i.course_id===c&&i.kind===k).sort((a,b)=>a.number-b.number);
+  const {c}=cur(), mode=(document.getElementById('lf')||{}).value||'all';
+  document.getElementById('lf').onchange=renderList;
+  const ord=id=>{const k=COURSES.findIndex(x=>x.id===id);return k<0?999:k;};
+  const l=items.filter(i=>mode==='all'||i.course_id===c).sort((x,y)=>ord(x.course_id)-ord(y.course_id)||(x.kind<y.kind?1:x.kind>y.kind?-1:0)||x.number-y.number);
   renderMigrate();
-  document.getElementById('ls').innerHTML=l.length?l.map(i=>`<div class="it"><div class="t"><b>${i.number}.</b> ${esc(i.title||'—')}<br><small>${i.html_path?'تفاعلي ✓':'تفاعلي ✗'} · ${i.pdf_path?'PDF ✓':'PDF ✗'}</small></div><button class="btn sec" style="width:auto;margin:0;font-size:14px;padding:6px 14px" data-e="${i.id}">تعديل</button><button class="btn del" data-d="${i.id}">حذف</button></div>`).join(''):'<small>مفيش حاجة لسه.</small>';
-  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const i=items.find(x=>x.id===b.dataset.e);document.getElementById('nm').value=i.number;document.getElementById('ti').value=i.title||'';hint();window.scrollTo(0,0);});
+  document.getElementById('ls').innerHTML=l.length?l.map(i=>{const co=COURSES.find(x=>x.id===i.course_id);return `<div class="it"><div class="t">${mode==='all'&&co?`<small>${esc(co.name)}</small><br>`:''}<b>${i.kind==='lecture'?'محاضرة':'سكشن'} ${i.number}:</b> ${esc(i.title||'—')}<br><small>${i.html_path?'تفاعلي ✓':'تفاعلي ✗'} · ${i.pdf_path?'PDF ✓':'PDF ✗'}</small></div><button class="btn sec" style="width:auto;margin:0;font-size:14px;padding:6px 14px" data-e="${i.id}">تعديل</button><button class="btn del" data-d="${i.id}">حذف</button></div>`;}).join(''):'<small>مفيش حاجة لسه هنا.</small>';
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const i=items.find(x=>x.id===b.dataset.e);document.getElementById('co').value=i.course_id;document.getElementById('kd').value=i.kind;document.getElementById('nm').value=i.number;document.getElementById('ti').value=i.title||'';hint();window.scrollTo(0,0);});
   document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>del(b.dataset.d));
 }
 const say=(t,c)=>{document.getElementById('st').innerHTML=`<div class="msg ${c}">${esc(t)}</div>`;};
