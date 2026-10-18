@@ -8,6 +8,9 @@ let ITEMS=[], blobUrl=null;
 
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const course=id=>COURSES.find(c=>c.id===id);
+const yearOf=n=>YEARS.find(y=>y.n===+n), termOf=n=>TERMS.find(t=>t.n===+n);
+const coursesOf=(y,t)=>COURSES.filter(c=>c.year===+y&&c.term===+t);
+const crumbFor=c=>[{t:'الرئيسية',href:'#/'},{t:yearOf(c.year).name,href:'#/y/'+c.year},{t:termOf(c.term).name,href:`#/y/${c.year}/t/${c.term}`}];
 const itemsOf=(cid,k)=>ITEMS.filter(i=>i.course_id===cid&&i.kind===k).sort((a,b)=>a.number-b.number);
 const style=c=>`--a:${c.a};--b:${c.b}`;
 const fileUrl=p=>isLocal(p)?p:CFG.SUPABASE_URL+'/storage/v1/object/public/files/'+p.split('/').map(encodeURIComponent).join('/');
@@ -16,6 +19,18 @@ function pdfLink(it){
   return isLocal(it.pdf_path)?it.pdf_path:fileUrl(it.pdf_path)+'?download='+encodeURIComponent(name);
 }
 
+async function loadCourses(){
+  if(!REMOTE) return;
+  const hdr=Object.assign({apikey:CFG.SUPABASE_ANON_KEY},CFG.SUPABASE_ANON_KEY.indexOf('eyJ')===0?{Authorization:'Bearer '+CFG.SUPABASE_ANON_KEY}:{});
+  try{
+    const r=await fetch(CFG.SUPABASE_URL+'/rest/v1/courses?select=*&order=sort.asc',{headers:hdr});
+    if(!r.ok) throw new Error(r.status);
+    const rows=await r.json();
+    if(rows.length){self.COURSES=rows;try{localStorage.setItem('courses_cache',JSON.stringify(rows));}catch(e){}}
+  }catch(err){
+    try{const c=JSON.parse(localStorage.getItem('courses_cache')||'null');if(c&&c.length)self.COURSES=c;}catch(e){}
+  }
+}
 async function loadItems(){
   if(!REMOTE){ITEMS=LOCAL;return;}
   try{
@@ -30,33 +45,43 @@ async function loadItems(){
   }
 }
 
+function hero(t,p){return `<header class="hero"><h1>${t}</h1><p>${p}</p></header>`;}
 function home(){
-  const cards=COURSES.map((c,i)=>{
+  const cards=YEARS.map((y,i)=>`<a class="card" style="${style(y)};animation-delay:${i*60}ms" href="#/y/${y.n}"><span class="n">${y.n}</span><span class="ic">${y.icon}</span><h2>${esc(y.name)}</h2><small>${COURSES.filter(c=>c.year===y.n).length} مادة</small></a>`).join('');
+  return hero('منصة الملخصات','اختر الفرقة')+`<div class="wrap"><div class="grid">${cards}</div><p class="note">الملف اللي تفتحه مرة وانت أونلاين بيفتح بعد كده من غير نت.</p></div>`;
+}
+function termsPage(y){
+  const Y=yearOf(y); if(!Y) return notFound();
+  const cards=TERMS.map(t=>`<a class="card" style="${style(Y)}" href="#/y/${Y.n}/t/${t.n}"><span class="ic">${t.icon}</span><h2>${esc(t.name)}</h2><small>${coursesOf(Y.n,t.n).length} مادة</small></a>`).join('');
+  return `<div class="wrap">${crumb([{t:'الرئيسية',href:'#/'}])}<h1 class="title">${Y.icon} ${esc(Y.name)}</h1><div class="big">${cards}</div></div>`;
+}
+function coursesPage(y,t){
+  const Y=yearOf(y),T=termOf(t); if(!Y||!T) return notFound();
+  const list=coursesOf(Y.n,T.n);
+  const cards=list.map((c,i)=>{
     const s=itemsOf(c.id,'section').length,l=itemsOf(c.id,'lecture').length;
     return `<a class="card" style="${style(c)};animation-delay:${i*50}ms" href="#/c/${c.id}"><span class="n">${i+1}</span><span class="ic">${c.icon}</span><h2>${esc(c.name)}</h2><small>${l} محاضرة · ${s} سكشن</small></a>`;
   }).join('');
-  return `<header class="hero"><h1>${esc(CFG.SITE_TITLE||'ملخصات الترم الأول')}</h1><p>اختر المادة</p></header>
-  <div class="wrap"><div class="grid">${cards}</div>
-  <p class="note">الملف اللي تفتحه مرة وانت أونلاين بيفتح بعد كده من غير نت.</p></div>`;
+  return `<div class="wrap">${crumb([{t:'الرئيسية',href:'#/'},{t:Y.name,href:'#/y/'+Y.n}])}<h1 class="title">${T.icon} ${esc(Y.name)} · ${esc(T.name)}</h1>${list.length?`<div class="grid">${cards}</div>`:'<div class="empty">لسه مفيش مواد هنا. هتنزل قريب.</div>'}</div>`;
 }
 function crumb(parts){return `<div class="crumb">${parts.map(p=>p.href?`<a href="${p.href}">${esc(p.t)}</a>`:`<span>${esc(p.t)}</span>`).join('<span>›</span>')}</div>`;}
 
 function coursePage(cid){
   const c=course(cid); if(!c) return notFound();
   const tiles=['lecture','section'].map(k=>`<a class="card" style="${style(c)}" href="#/c/${cid}/${k}"><span class="ic">${KINDS[k].icon}</span><h2>${KINDS[k].many}</h2><small>${itemsOf(cid,k).length} متاح</small></a>`).join('');
-  return `<div class="wrap">${crumb([{t:'الرئيسية',href:'#/'}])}<h1 class="title">${c.icon} ${esc(c.name)}</h1><div class="big">${tiles}</div></div>`;
+  return `<div class="wrap">${crumb(crumbFor(c))}<h1 class="title">${c.icon} ${esc(c.name)}</h1><div class="big">${tiles}</div></div>`;
 }
 function listPage(cid,k){
   const c=course(cid); if(!c||!KINDS[k]) return notFound();
   const list=itemsOf(cid,k);
   const cards=list.map(it=>`<a class="card" style="${style(c)}" href="#/i/${it.id}"><span class="n">${it.number}</span><small>${KINDS[k].one} ${it.number}</small><h2>${esc(it.title||KINDS[k].one+' '+it.number)}</h2><div class="tags">${it.html_path?'<span>تفاعلي</span>':''}${it.pdf_path?'<span>PDF</span>':''}</div></a>`).join('');
-  return `<div class="wrap">${crumb([{t:'الرئيسية',href:'#/'},{t:c.name,href:'#/c/'+cid}])}<h1 class="title">${KINDS[k].icon} ${KINDS[k].many} ${esc(c.name)}</h1>
+  return `<div class="wrap">${crumb(crumbFor(c).concat([{t:c.name,href:'#/c/'+cid}]))}<h1 class="title">${KINDS[k].icon} ${KINDS[k].many} ${esc(c.name)}</h1>
   ${list.length?`<div class="grid">${cards}</div>`:`<div class="empty">لسه مفيش ${KINDS[k].many} هنا. هتنزل قريب.</div>`}</div>`;
 }
 function itemPage(id){
   const it=ITEMS.find(x=>x.id===id); if(!it) return notFound();
   const c=course(it.course_id), k=KINDS[it.kind], st=style(c);
-  return `<div class="wrap" style="${st}">${crumb([{t:'الرئيسية',href:'#/'},{t:c.name,href:'#/c/'+c.id},{t:k.many,href:`#/c/${c.id}/${it.kind}`}])}
+  return `<div class="wrap" style="${st}">${crumb(crumbFor(c).concat([{t:c.name,href:'#/c/'+c.id},{t:k.many,href:`#/c/${c.id}/${it.kind}`}]))}
   <h1 class="title">${k.one} ${it.number}${it.title?': '+esc(it.title):''}</h1>
   <div class="btns">
    ${it.html_path?`<a class="btn main" href="#/v/${it.id}">🚀 افتح الملف التفاعلي وذاكر</a>`:''}
@@ -93,12 +118,12 @@ async function route(){
   const p=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
   window.scrollTo(0,0);
   if(p[0]==='v'&&p[1]) return viewer(p[1]);
-  $app.innerHTML=p[0]==='c'&&p[1]&&p[2]?listPage(p[1],p[2]):p[0]==='c'&&p[1]?coursePage(p[1]):p[0]==='i'&&p[1]?itemPage(p[1]):p.length?notFound():home();
+  $app.innerHTML=p[0]==='y'&&p[1]&&p[2]==='t'&&p[3]?coursesPage(p[1],p[3]):p[0]==='y'&&p[1]?termsPage(p[1]):p[0]==='c'&&p[1]&&p[2]?listPage(p[1],p[2]):p[0]==='c'&&p[1]?coursePage(p[1]):p[0]==='i'&&p[1]?itemPage(p[1]):p.length?notFound():home();
 }
 
 (async function init(){
   $app.innerHTML='<div class="vload" style="min-height:100vh;color:#a9b9d0"><div><div class="spin"></div>جاري التحميل…</div></div>';
-  try{await loadItems();}
+  try{await Promise.all([loadItems(),loadCourses()]);}
   catch(e){$app.innerHTML='<div class="wrap"><div class="empty" style="margin-top:60px">مش قادر أحمّل البيانات. اتأكد من النت وجرب تاني.<br><br><a class="btn" style="--a:#2f7bd9;display:inline-flex" href="javascript:location.reload()">إعادة المحاولة</a></div></div>';return;}
   window.addEventListener('hashchange',route); route();
   if('serviceWorker' in navigator&&location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
