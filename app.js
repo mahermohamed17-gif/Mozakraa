@@ -19,6 +19,15 @@ function pdfLink(it){
   return isLocal(it.pdf_path)?it.pdf_path:fileUrl(it.pdf_path)+'?download='+encodeURIComponent(name);
 }
 
+function track(){
+  if(!REMOTE||isAdminDevice()) return;
+  try{ if(sessionStorage.getItem('v_sent')) return; sessionStorage.setItem('v_sent','1'); }catch(e){}
+  let vid='';
+  try{ vid=localStorage.getItem('vid')||''; if(!vid){ vid=(self.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)); localStorage.setItem('vid',vid); } }catch(e){ vid='x'+Math.random().toString(36).slice(2); }
+  const k=CFG.SUPABASE_ANON_KEY, h={apikey:k,'Content-Type':'application/json',Prefer:'return=minimal'};
+  if(k.indexOf('eyJ')===0) h.Authorization='Bearer '+k;
+  fetch(CFG.SUPABASE_URL+'/rest/v1/visits',{method:'POST',headers:h,body:JSON.stringify({visitor_id:vid,device:/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'موبايل':'كمبيوتر'})}).catch(()=>{});
+}
 async function loadCourses(){
   if(!REMOTE) return;
   const hdr=Object.assign({apikey:CFG.SUPABASE_ANON_KEY},CFG.SUPABASE_ANON_KEY.indexOf('eyJ')===0?{Authorization:'Bearer '+CFG.SUPABASE_ANON_KEY}:{});
@@ -127,7 +136,7 @@ async function route(){
   $app.innerHTML='<div class="vload" style="min-height:100vh;color:#a9b9d0"><div><div class="spin"></div>جاري التحميل…</div></div>';
   try{await Promise.all([loadItems(),loadCourses()]);}
   catch(e){$app.innerHTML='<div class="wrap"><div class="empty" style="margin-top:60px">مش قادر أحمّل البيانات. اتأكد من النت وجرب تاني.<br><br><a class="btn" style="--a:#2f7bd9;display:inline-flex" href="javascript:location.reload()">إعادة المحاولة</a></div></div>';return;}
-  window.addEventListener('hashchange',route); route();
+  window.addEventListener('hashchange',route); route(); track();
   if('serviceWorker' in navigator&&location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
 })();
 })();

@@ -111,6 +111,33 @@ async function delCourse(id){
 const cur=()=>({c:document.getElementById('co').value,k:document.getElementById('kd').value});
 function nextNum(){const {c,k}=cur();return items.filter(i=>i.course_id===c&&i.kind===k).reduce((m,i)=>Math.max(m,i.number),0)+1;}
 
+async function loadVisits(){
+  const box=document.getElementById('vs'); box.innerHTML='جاري التحميل…';
+  try{
+    let rows=[];
+    for(let off=0;off<20000;off+=1000){
+      const r=await api('/rest/v1/visits?select=visitor_id,device,created_at&order=created_at.desc&limit=1000&offset='+off,{headers:H()});
+      if(!r.ok){ box.innerHTML='<div class="msg err">جدول الزوار مش موجود. شغّل ملف supabase-visits.sql في SQL Editor (الخطوة في اقرأني.txt) وبعدين اضغط تحديث.</div>'; return; }
+      const part=await r.json(); rows=rows.concat(part); if(part.length<1000) break;
+    }
+    const day=t=>new Date(t).toLocaleDateString('en-CA');
+    const today=day(Date.now()), byDay={};
+    rows.forEach(v=>{const k=day(v.created_at);(byDay[k]=byDay[k]||{v:0,u:new Set()});byDay[k].v++;byDay[k].u.add(v.visitor_id);});
+    const uniq=new Set(rows.map(v=>v.visitor_id));
+    const t=byDay[today]||{v:0,u:new Set()};
+    const week=new Set(rows.filter(v=>Date.now()-new Date(v.created_at)<7*864e5).map(v=>v.visitor_id));
+    const days=[]; for(let i=0;i<14;i++){const k=day(Date.now()-i*864e5);days.push(k);}
+    const fmt=new Intl.DateTimeFormat('ar-EG',{dateStyle:'medium',timeStyle:'short'});
+    box.innerHTML=`<div class="res" style="margin-top:0">
+      <div>زائرين النهاردة<b>${t.u.size}</b></div><div>زيارات النهاردة<b>${t.v}</b></div>
+      <div>زائرين آخر ٧ أيام<b>${week.size}</b></div><div>إجمالي الزائرين<b>${uniq.size}</b></div></div>
+      <p class="hint">الزائر = جهاز/متصفح واحد (نفس الشخص لو دخل من جهازين بيتعد مرتين). الزيارة = كل مرة يفتح فيها المنصة.</p>
+      <h3 style="font-size:15px;margin:14px 0 4px">آخر ١٤ يوم</h3>
+      <div class="tw"><table><thead><tr><th>التاريخ</th><th>زائرين</th><th>زيارات</th></tr></thead><tbody>${days.map(k=>`<tr><td>${k}</td><td>${(byDay[k]||{u:{size:0}}).u.size}</td><td>${(byDay[k]||{v:0}).v}</td></tr>`).join('')}</tbody></table></div>
+      <h3 style="font-size:15px;margin:14px 0 4px">آخر الزيارات</h3>
+      <div class="tw"><table><thead><tr><th>التاريخ والوقت</th><th>الجهاز</th><th>رقم الزائر</th></tr></thead><tbody>${rows.slice(0,30).map(v=>`<tr><td>${esc(fmt.format(new Date(v.created_at)))}</td><td>${esc(v.device||'')}</td><td dir="ltr">${esc(String(v.visitor_id).slice(0,6))}</td></tr>`).join('')||'<tr><td colspan="3">لسه مفيش زيارات.</td></tr>'}</tbody></table></div>`;
+  }catch(e){box.innerHTML='<div class="msg err">'+esc(e.message)+'</div>';}
+}
 function courseOptions(){
   let h='';
   YEARS.forEach(y=>TERMS.forEach(t=>{
@@ -127,6 +154,7 @@ function bulkOptions(){
 function showPanel(){
   try{localStorage.setItem('adm_device','1');}catch(e){}
   root.innerHTML=`<div class="top"><span>مسجّل دخول ✅</span><button class="btn sec" id="out" style="width:auto;margin:0;padding:6px 16px;font-size:14px">خروج</button></div>
+  <div class="box"><h2 style="margin:0 0 6px">📊 الزوار</h2><div id="vs" class="sm">جاري التحميل…</div><button class="btn sec" id="vr" style="margin-top:10px">🔄 تحديث الأرقام</button></div>
   <div class="box"><h2 style="margin:0">رفع / تعديل ملف</h2>
    <div class="row"><div><label>المادة</label><select id="co">${courseOptions()}</select></div>
    <div><label>النوع</label><select id="kd"><option value="lecture">محاضرة</option><option value="section">سكشن</option></select></div></div>
@@ -146,6 +174,7 @@ function showPanel(){
   document.getElementById('nm').oninput=hint;
   document.getElementById('sv').onclick=save;
   renderCourses();
+  document.getElementById('vr').onclick=loadVisits; loadVisits();
   document.getElementById('mgb').onclick=migrate;
   document.getElementById('bb').onclick=bulkDelete;
   refresh();

@@ -40,3 +40,5 @@ a{color:inherit;text-decoration:none}
 .spin{width:34px;height:34px;border:4px solid #ddd;border-top-color:#2f7bd9;border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 10px}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.credit{text-align:center;color:#8ea2bd;font-size:13px;padding:4px 12px calc(26px + env(safe-area-inset-bottom,0px))}.credit b{color:#cfe0ff}
