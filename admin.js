@@ -21,7 +21,7 @@ async function api(path,opt){
 function logout(expired){sessionStorage.removeItem('adm_token');token='';showLogin(expired?'انتهت الجلسة، سجّل دخول تاني':'');}
 
 function showLogin(m){
-  root.innerHTML=`<div class="box"><label>الإيميل</label><input id="em" type="email" autocomplete="username"><label>الباسورد</label><input id="pw" type="password" autocomplete="current-password"><button class="btn" id="go">دخول</button><div id="m">${m?`<div class="msg err">${esc(m)}</div>`:''}</div></div>`;
+  root.innerHTML=`<div class="box"><label>الإيميل</label><input id="em" type="email" autocomplete="username"><label>الباسورد</label><div style="position:relative"><input id="pw" type="password" autocomplete="current-password" style="padding-left:52px"><button type="button" id="eye" aria-label="إظهار الباسورد" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:22px;cursor:pointer">👁️</button></div><button class="btn" id="go">دخول</button><div id="m">${m?`<div class="msg err">${esc(m)}</div>`:''}</div></div>`;
   const go=async()=>{
     const m=document.getElementById('m'); m.innerHTML='<div class="msg inf">جاري الدخول…</div>';
     try{
@@ -31,6 +31,7 @@ function showLogin(m){
     }catch(e){m.innerHTML=`<div class="msg err">${esc(e.message)}</div>`;}
   };
   document.getElementById('go').onclick=go;
+  document.getElementById('eye').onclick=()=>{const i=document.getElementById('pw'),h=i.type==='password';i.type=h?'text':'password';document.getElementById('eye').textContent=h?'🙈':'👁️';};
   document.getElementById('pw').onkeydown=e=>{if(e.key==='Enter')go();};
 }
 async function load(){
@@ -124,6 +125,7 @@ function bulkOptions(){
   return h+'<option value="all">كل حاجة في المنصة (كل الفرق)</option>';
 }
 function showPanel(){
+  try{localStorage.setItem('adm_device','1');}catch(e){}
   root.innerHTML=`<div class="top"><span>مسجّل دخول ✅</span><button class="btn sec" id="out" style="width:auto;margin:0;padding:6px 16px;font-size:14px">خروج</button></div>
   <div class="box"><h2 style="margin:0">رفع / تعديل ملف</h2>
    <div class="row"><div><label>المادة</label><select id="co">${courseOptions()}</select></div>

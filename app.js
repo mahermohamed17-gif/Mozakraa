@@ -45,10 +45,11 @@ async function loadItems(){
   }
 }
 
-function hero(t,p){return `<header class="hero"><h1>${t}</h1><p>${p}</p></header>`;}
+function hero(t,p,id){return `<header class="hero"><h1${id?` id="${id}"`:''}>${t}</h1><p>${p}</p></header>`;}
+function isAdminDevice(){try{return localStorage.getItem('adm_device')==='1';}catch(e){return false;}}
 function home(){
   const cards=YEARS.map((y,i)=>`<a class="card" style="${style(y)};animation-delay:${i*60}ms" href="#/y/${y.n}"><span class="n">${y.n}</span><span class="ic">${y.icon}</span><h2>${esc(y.name)}</h2><small>${COURSES.filter(c=>c.year===y.n).length} مادة</small></a>`).join('');
-  return hero('منصة الملخصات','اختر الفرقة')+`<div class="wrap"><div class="grid">${cards}</div><p class="note">الملف اللي تفتحه مرة وانت أونلاين بيفتح بعد كده من غير نت.</p></div>`;
+  return hero('منصة الملخصات','اختر الفرقة','ttl')+`<div class="wrap"><div class="grid">${cards}</div><p class="note">الملف اللي تفتحه مرة وانت أونلاين بيفتح بعد كده من غير نت.</p>${isAdminDevice()?'<p class="note"><a href="admin.html" style="text-decoration:underline">🔐 لوحة التحكم</a></p>':''}</div>`;
 }
 function termsPage(y){
   const Y=yearOf(y); if(!Y) return notFound();
@@ -119,6 +120,7 @@ async function route(){
   window.scrollTo(0,0);
   if(p[0]==='v'&&p[1]) return viewer(p[1]);
   $app.innerHTML=p[0]==='y'&&p[1]&&p[2]==='t'&&p[3]?coursesPage(p[1],p[3]):p[0]==='y'&&p[1]?termsPage(p[1]):p[0]==='c'&&p[1]&&p[2]?listPage(p[1],p[2]):p[0]==='c'&&p[1]?coursePage(p[1]):p[0]==='i'&&p[1]?itemPage(p[1]):p.length?notFound():home();
+  const tt=document.getElementById('ttl'); if(tt){let n=0,tm;tt.onclick=()=>{n++;clearTimeout(tm);tm=setTimeout(()=>{n=0},1500);if(n>=5)location.href='admin.html';};}
 }
 
 (async function init(){
