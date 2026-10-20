@@ -95,7 +95,7 @@ function itemPage(id){
   <h1 class="title">${k.one} ${it.number}${it.title?': '+esc(it.title):''}</h1>
   <div class="btns">
    ${it.html_path?`<a class="btn main" href="#/v/${it.id}">🚀 افتح الملف التفاعلي وذاكر</a>`:''}
-   ${it.pdf_path?`<a class="btn" href="${esc(pdfLink(it))}" download="${esc(c.name)} - ${k.one} ${it.number}.pdf">⬇️ تنزيل PDF</a>`:''}
+   ${it.pdf_path?`<a class="btn" href="${esc(pdfLink(it))}" download="${esc(c.name)} - ${k.one} ${it.number}.pdf">⬇️ تنزيل PDF</a>`:(it.html_path?`<a class="btn" href="print.html#/${it.id}" target="_blank" rel="noopener">⬇️ تنزيل PDF</a>`:'')}
    ${(!it.html_path&&!it.pdf_path)?'<div class="empty">الملفات لسه مترفعتش.</div>':''}
   </div></div>`;
 }
@@ -104,7 +104,7 @@ function notFound(){return `<div class="wrap"><div class="empty">الصفحة د
 async function viewer(id){
   const it=ITEMS.find(x=>x.id===id); if(!it||!it.html_path){$app.innerHTML=notFound();return;}
   const c=course(it.course_id), k=KINDS[it.kind];
-  $app.innerHTML=`<div class="viewer" style="${style(c)}"><div class="vbar"><a class="back" href="#/i/${it.id}">→ رجوع</a><b>${esc(c.name)} · ${k.one} ${it.number}</b>${it.pdf_path?`<a href="${esc(pdfLink(it))}" download>PDF ⬇️</a>`:''}</div><div class="vload" id="vl"><div><div class="spin"></div>جاري التحميل…</div></div></div>`;
+  $app.innerHTML=`<div class="viewer" style="${style(c)}"><div class="vbar"><a class="back" href="#/i/${it.id}">→ رجوع</a><b>${esc(c.name)} · ${k.one} ${it.number}</b>${it.pdf_path?`<a href="${esc(pdfLink(it))}" download>PDF ⬇️</a>`:`<a href="print.html#/${it.id}" target="_blank" rel="noopener">PDF ⬇️</a>`}</div><div class="vsal">اللهم صلِّ وسلِّم على سيدنا محمد وعلى آله وصحبه</div><div class="vload" id="vl"><div><div class="spin"></div>جاري التحميل…</div></div></div>`;
   const box=$app.querySelector('.viewer'), vl=$app.querySelector('#vl');
   try{
     const f=document.createElement('iframe'); f.title=it.title||'';

@@ -42,3 +42,6 @@ a{color:inherit;text-decoration:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 .credit{text-align:center;color:#8ea2bd;font-size:13px;padding:4px 12px calc(26px + env(safe-area-inset-bottom,0px))}.credit b{color:#cfe0ff}
+
+.sal{background:linear-gradient(90deg,#0c9a52,#0a6e3c);color:#fff;text-align:center;font-weight:800;font-size:clamp(20px,5.4vw,30px);padding:10px 12px;line-height:1.7;letter-spacing:.2px}
+.vsal{background:#0c9a52;color:#fff;text-align:center;font-weight:800;font-size:18px;padding:2px 8px;line-height:1.6}

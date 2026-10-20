@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>تعديل المحتوى</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--a:#2f7bd9;--soft:#17212f;--th:#1f2f48;--ink:#eef3fa;--mut:#a9b9d0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin:14px 0}
+label{display:block;font-weight:700;margin:10px 0 4px;font-size:15px}
+select,input[type=text]{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:#0f1722;color:var(--ink);font:inherit;font-size:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.row{grid-template-columns:1fr}}
+.btn{font:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:2px solid var(--a);background:transparent;color:#fff;border-radius:99px;padding:6px 18px;font-weight:800;font-size:15px}
+.btn.main{background:#0c9a52;border-color:#0c9a52}.btn.del{border-color:#d33;color:#ffb3b3}.btn:disabled{opacity:.4}
+.msg{margin-top:12px;padding:10px 14px;border-radius:12px;font-size:15px}.msg.ok{background:#0c3a22;color:#9ff0c1}.msg.err{background:#3b1010;color:#ffb3b3}.msg.inf{background:#1d2a3d;color:#cfe0ff}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}.it:first-child{border-top:0}.it .t{flex:1;min-width:0}.sm{color:var(--mut);font-size:13px}
+.tb{position:sticky;top:0;z-index:20;background:#0f1722;border-bottom:1px solid var(--line);padding:8px 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.eg{background:var(--soft);border:1px solid var(--line);border-top:5px solid var(--a);border-radius:18px;margin:14px 0;padding:10px 14px}
+.eg-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}.eg-bar .btn{padding:2px 12px;font-size:13px}.egn{background:var(--a);color:#fff;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-weight:800}
+.egt{margin:4px 0 8px;font-size:20px;line-height:1.6;outline:2px dashed transparent;border-radius:8px;padding:2px 6px}
+.egb{outline:2px dashed transparent;border-radius:8px;padding:6px;min-height:60px;line-height:1.95}
+.egt:focus,.egb:focus{outline-color:#2f7bd9;background:rgba(47,123,217,.08)}
+.egb table{border-collapse:collapse;width:100%;margin:10px 0}.egb th,.egb td{border:1px solid var(--line);padding:8px 12px;text-align:right;vertical-align:top}.egb th{background:var(--th)}
+.egb .tw{overflow-x:auto}.egb ol,.egb ul{padding-right:26px}.egb p{margin:8px 0}
+.egb .formula{background:var(--th);border-right:5px solid var(--a);border-radius:12px;padding:8px 14px;margin:10px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.egb .fx{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}.egb .frac{display:inline-flex;flex-direction:column;align-items:center;text-align:center;line-height:1.5}
+.egb .frac span:first-child{border-bottom:2px solid currentColor;padding:0 8px}.egb .frac span:last-child{padding:0 8px}
+.egb .qa{border:1.5px dashed var(--a);border-radius:14px;padding:10px 14px;margin:12px 0;position:relative}.egb .qa .q{font-weight:800}
+.egb .qa .a{display:block!important;margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}
+.qdel{font:inherit;font-size:12px;cursor:pointer;float:left;border:1px solid #d33;background:transparent;color:#ffb3b3;border-radius:99px;padding:0 10px}
+bdi{font-family:"Segoe UI",Arial,sans-serif}
+</style></head><body>
+<div class="sal">اللهم صلِّ وسلِّم على سيدنا محمد وعلى آله وصحبه أجمعين</div>
+<header class="hero"><h1>✏️ تعديل المحتوى</h1><p><a href="admin.html" style="display:inline-block;border:2px solid #fff;border-radius:99px;padding:2px 18px;font-weight:700;color:#fff;margin:2px">← لوحة التحكم</a> <a href="index.html" style="display:inline-block;border:2px solid #fff;border-radius:99px;padding:2px 18px;font-weight:700;color:#fff;margin:2px">🏠 المنصة</a></p></header>
+<div class="wrap" id="root">جاري التحميل…</div>
+<footer class="credit">تصميم وفكرة: <b>المهندس ماهر محمد علي أبو دبش</b></footer>
+<script src="config.js"></script>
+<script src="courses.js"></script>
+<script src="items.js"></script>
+<script src="editor.js"></script>
+</body></html>
